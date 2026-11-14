@@ -229,6 +229,32 @@ function handleWebRequest_(request) {
         return { reportSheet: sheet.getName() };
       }) });
     }
+    // --- Inventory (WARES v2): pembacaan hasil model, read-only. Tidak mengambil
+    //     global lock karena hanya membaca; website hanya mencerminkan angka. ---
+    if (action === "inv.dashboard") {
+      return json_({ ok: true, data: getInventoryDashboard_() });
+    }
+    if (action === "inv.rmhasil") {
+      return json_({ ok: true, data: { items: getInventoryRmHasil_() } });
+    }
+    if (action === "inv.proyeksi") {
+      return json_({ ok: true, data: getInventoryProyeksi_() });
+    }
+    if (action === "inv.demand") {
+      return json_({ ok: true, data: getInventoryDemand_() });
+    }
+    if (action === "inv.pola") {
+      return json_({ ok: true, data: { items: getInventoryPola_() } });
+    }
+    if (action === "inv.oporder") {
+      return json_({ ok: true, data: getInventoryOpOrder_() });
+    }
+    if (action === "inv.oprencana") {
+      return json_({ ok: true, data: getInventoryOpRencana_() });
+    }
+    if (action === "inv.pm") {
+      return json_({ ok: true, data: getInventoryPm_() });
+    }
     throw apiError_("UNKNOWN_ACTION", "Action API tidak dikenal.");
   } catch (error) {
     console.error(error && error.stack ? error.stack : error);
@@ -2786,4 +2812,542 @@ function apiError_(code, message, expose) {
 
 function json_(value) {
   return ContentService.createTextOutput(JSON.stringify(value)).setMimeType(ContentService.MimeType.JSON);
+}
+
+/* ================================================================== *
+ * INVENTORY (WARES v2) — pembacaan hasil model dari workbook
+ * "WARES Reliability x Inventory Management". Read-only; website hanya
+ * mencerminkan angka yang dihitung rumus Excel. Bentuk JSON WAJIB sama
+ * dengan fixture di src/lib/inventory/data/*.json — dijaga oleh
+ * src/lib/inventory/apps-script-inv.test.ts (menjalankan file ini di
+ * node:vm atas data sel asli dan membandingkan ke fixture).
+ * ================================================================== */
+
+var INV_SHEETS = Object.freeze({
+  DASHBOARD: "DASHBOARD",
+  RM_HASIL: "RM_HASIL",
+  DEMAND: "DATA_DEMAND (RM)",
+  OP_STOK: "OP_STOK",
+  TERPAKAI: "DATA_SKU TERPAKAI",
+  OP_ORDER: "OP_ORDER",
+  OP_RENCANA: "OP_RENCANA",
+  PM_OVERHAUL: "PM_OVERHAUL"
+});
+
+function invGrid_(name) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  return requireSheet_(ss, name).getDataRange().getValues();
+}
+
+function invIsDate_(v) {
+  return Object.prototype.toString.call(v) === "[object Date]" && !isNaN(v.getTime());
+}
+
+function invStr_(v) {
+  if (v == null) return "";
+  if (invIsDate_(v)) return Utilities.formatDate(v, WARES.TIME_ZONE, "yyyy-MM-dd");
+  return String(v).trim();
+}
+
+function invNum_(v) {
+  if (typeof v === "number") return isFinite(v) ? v : 0;
+  if (v == null || v === "") return 0;
+  var n = Number(v);
+  return isFinite(n) ? n : 0;
+}
+
+function invIso_(v) {
+  if (invIsDate_(v)) return Utilities.formatDate(v, WARES.TIME_ZONE, "yyyy-MM-dd");
+  return invStr_(v);
+}
+
+function invRound_(v, dec) {
+  var f = Math.pow(10, dec || 0);
+  return Math.round(invNum_(v) * f) / f;
+}
+
+/** Peta nama kolom (trim) -> indeks, dari satu baris header. */
+function invHeaderMap_(row) {
+  var map = {};
+  for (var i = 0; i < row.length; i++) {
+    var name = invStr_(row[i]);
+    if (name !== "" && !(name in map)) map[name] = i;
+  }
+  return map;
+}
+
+function invFindRow_(grid, predicate) {
+  for (var i = 0; i < grid.length; i++) {
+    if (predicate(grid[i])) return i;
+  }
+  return -1;
+}
+
+function invRowHas_(row, text) {
+  for (var i = 0; i < row.length; i++) {
+    if (invStr_(row[i]) === text) return true;
+  }
+  return false;
+}
+
+function invCell_(row, map, key) {
+  return (key in map && map[key] < row.length) ? row[map[key]] : null;
+}
+
+function getInventoryDashboard_() {
+  var g = invGrid_(INV_SHEETS.DASHBOARD);
+
+  // Tabel per-SKU: baris header memuat "Sparepart" dan "Status".
+  var hdrI = invFindRow_(g, function (r) { return invRowHas_(r, "Sparepart") && invRowHas_(r, "Status"); });
+  var col = invHeaderMap_(g[hdrI]);
+  var items = [];
+  for (var i = hdrI + 1; i < g.length; i++) {
+    var row = g[i];
+    var no = invCell_(row, col, "No.");
+    if (no == null || invStr_(no) === "") continue;
+    items.push({
+      no: Math.round(invNum_(no)),
+      mesin: invStr_(invCell_(row, col, "Mesin")),
+      sparepart: invStr_(invCell_(row, col, "Sparepart")),
+      ecr: invStr_(invCell_(row, col, "ECR")),
+      satuan: invStr_(invCell_(row, col, "Satuan")),
+      leadTime: invNum_(invCell_(row, col, "Lead time L (hari)")),
+      kebutuhanPM: invNum_(invCell_(row, col, "Kebutuhan PM jendela L+R")),
+      kuantilRM: invNum_(invCell_(row, col, "Kuantil RM jendela L+R")),
+      targetS: invNum_(invCell_(row, col, "Target S")),
+      stokFisik: invNum_(invCell_(row, col, "Stok fisik")),
+      pesananJalan: invNum_(invCell_(row, col, "Pesanan dalam perjalanan")),
+      posisiPersediaan: invNum_(invCell_(row, col, "Posisi persediaan")),
+      kebutuhanL: invNum_(invCell_(row, col, "Kebutuhan selama L (PM + RM)")),
+      status: invStr_(invCell_(row, col, "Status")),
+      jumlahPesan: invNum_(invCell_(row, col, "Jumlah pesan (unit)")),
+      perkiraanTiba: invIso_(invCell_(row, col, "Perkiraan tiba")),
+      tindakLanjut: invStr_(invCell_(row, col, "Tindak lanjut"))
+    });
+  }
+
+  // Ringkasan: baris header memuat "Total SKU"; nilai di baris berikutnya.
+  var sumI = invFindRow_(g, function (r) { return invRowHas_(r, "Total SKU"); });
+  var scol = invHeaderMap_(g[sumI]);
+  var sv = g[sumI + 1];
+  var ringkasan = {
+    totalSku: Math.round(invNum_(invCell_(sv, scol, "Total SKU"))),
+    kritis: Math.round(invNum_(invCell_(sv, scol, "Kritis"))),
+    pesanSekarang: Math.round(invNum_(invCell_(sv, scol, "Pesan sekarang"))),
+    cukup: Math.round(invNum_(invCell_(sv, scol, "Cukup"))),
+    persenCukup: invNum_(invCell_(sv, scol, "% Cukup")),
+    nilaiPesanan: invNum_(invCell_(sv, scol, "Nilai pesanan (Rp)")),
+    tanggalAcuan: invIso_(invLeftValue_(g, "Tanggal acuan (review)")),
+    periodeReviewHari: invNum_(invLeftValue_(g, "Periode review R (hari)")),
+    serviceLevel: invNum_(invLeftValue_(g, "Service level"))
+  };
+
+  // Breakdown per mesin: header memuat "Mesin", "Kritis", "Total".
+  var pmI = invFindRow_(g, function (r) {
+    return invRowHas_(r, "Mesin") && invRowHas_(r, "Total") && invRowHas_(r, "Kritis");
+  });
+  var pcol = invHeaderMap_(g[pmI]);
+  var perMesin = [];
+  for (var j = pmI + 1; j < g.length; j++) {
+    var mesin = invStr_(invCell_(g[j], pcol, "Mesin"));
+    if (mesin === "") continue;
+    if (mesin === "TOTAL") break;
+    perMesin.push({
+      mesin: mesin,
+      kritis: Math.round(invNum_(invCell_(g[j], pcol, "Kritis"))),
+      pesanSekarang: Math.round(invNum_(invCell_(g[j], pcol, "Pesan sekarang"))),
+      cukup: Math.round(invNum_(invCell_(g[j], pcol, "Cukup"))),
+      total: Math.round(invNum_(invCell_(g[j], pcol, "Total")))
+    });
+  }
+
+  return { ringkasan: ringkasan, perMesin: perMesin, items: items };
+}
+
+/** Nilai di sel non-kosong pertama di kanan label (panel kiri DASHBOARD). */
+function invLeftValue_(grid, label) {
+  for (var i = 0; i < grid.length; i++) {
+    var row = grid[i];
+    for (var j = 0; j < row.length; j++) {
+      if (invStr_(row[j]) === label) {
+        for (var k = j + 1; k < row.length; k++) {
+          if (invStr_(row[k]) !== "") return row[k];
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function getInventoryRmHasil_() {
+  var g = invGrid_(INV_SHEETS.RM_HASIL);
+  var col = invHeaderMap_(g[0]);
+  var items = [];
+  for (var i = 1; i < g.length; i++) {
+    var row = g[i];
+    var no = invCell_(row, col, "No");
+    if (no == null || invStr_(no) === "") continue;
+    items.push({
+      no: Math.round(invNum_(no)),
+      kategori: invStr_(invCell_(row, col, "Kategori")),
+      kriteria: invStr_(invCell_(row, col, "Kriteria")),
+      namaBarang: invStr_(invCell_(row, col, "Nama Barang")),
+      leadTime: invNum_(invCell_(row, col, "Lead Time (hari)")),
+      serviceLevel: invNum_(invCell_(row, col, "Service Level")),
+      totalKeluar35: invNum_(invCell_(row, col, "Total Keluar (35 mgg)")),
+      rataPerMinggu: invNum_(invCell_(row, col, "Rata-rata / minggu")),
+      stdPerMinggu: invNum_(invCell_(row, col, "Std Dev / minggu")),
+      muLT: invNum_(invCell_(row, col, "Demand selama LT (mu)")),
+      sigmaLT: invNum_(invCell_(row, col, "Std Dev selama LT (sigma)")),
+      z: invNum_(invCell_(row, col, "z")),
+      ropRekomendasi: invNum_(invCell_(row, col, "STOK HOLD (ROP) REKOMENDASI")),
+      ssRekomendasi: invNum_(invCell_(row, col, "SAFETY STOCK (SS) REKOMENDASI")),
+      dasar: invStr_(invCell_(row, col, "Dasar"))
+    });
+  }
+  return items;
+}
+
+function getInventoryDemand_() {
+  var g = invGrid_(INV_SHEETS.DEMAND);
+  var hdrI = invFindRow_(g, function (r) {
+    for (var i = 0; i < r.length; i++) { if (invStr_(r[i]).indexOf("KEY") >= 0) return true; }
+    return false;
+  });
+  var header = g[hdrI];
+  var keyIdx = -1;
+  for (var c = 0; c < header.length; c++) {
+    if (invStr_(header[c]).indexOf("KEY") >= 0) { keyIdx = c; break; }
+  }
+  var weekCols = [];
+  var minggu = [];
+  for (var w = keyIdx + 1; w < header.length; w++) {
+    var h = header[w];
+    var isWeek = (typeof h === "number" && h > 0) || /^\d+$/.test(invStr_(h));
+    if (isWeek) { weekCols.push(w); minggu.push(Math.round(invNum_(h))); }
+  }
+  var items = [];
+  for (var i = hdrI + 1; i < g.length; i++) {
+    var key = invStr_(g[i][keyIdx]);
+    if (key === "") continue;
+    var series = [];
+    for (var k = 0; k < weekCols.length; k++) {
+      series.push(invNum_(g[i][weekCols[k]]));
+    }
+    items.push({ nama: key, mingguan: series });
+  }
+  return { minggu: minggu, items: items };
+}
+
+function getInventoryProyeksi_() {
+  var g = invGrid_(INV_SHEETS.OP_STOK);
+  var CAP = 53;
+  var rowTgl = invFindRow_(g, function (r) { return invRowHas_(r, "Tanggal review"); });
+  var rowNilai = invFindRow_(g, function (r) { return invRowHas_(r, "Nilai stok positif (Rp)"); });
+  var rowShort = invFindRow_(g, function (r) { return invRowHas_(r, "Jumlah SKU kekurangan"); });
+
+  var dataCols = [];
+  for (var c = 0; c < g[rowTgl].length; c++) {
+    if (invIsDate_(g[rowTgl][c])) { dataCols.push(c); if (dataCols.length >= CAP) break; }
+  }
+  var reviewDates = [], nilaiStok = [], jumlahKurang = [];
+  for (var d = 0; d < dataCols.length; d++) {
+    reviewDates.push(invIso_(g[rowTgl][dataCols[d]]));
+    nilaiStok.push(Math.round(invNum_(g[rowNilai][dataCols[d]])));
+    jumlahKurang.push(Math.round(invNum_(g[rowShort][dataCols[d]])));
+  }
+
+  // Blok stok fisik per SKU: header memuat "Nama sparepart".
+  var blockI = invFindRow_(g, function (r) { return invRowHas_(r, "Nama sparepart"); });
+  var nameCol = -1, bagianCol = -1;
+  for (var h = 0; h < g[blockI].length; h++) {
+    var lbl = invStr_(g[blockI][h]);
+    if (lbl === "Nama sparepart") nameCol = h;
+    if (lbl === "Bagian") bagianCol = h;
+  }
+  if (bagianCol < 0) bagianCol = nameCol - 1;
+
+  var series = [];
+  for (var i = blockI + 1; i < g.length; i++) {
+    var nama = invStr_(g[i][nameCol]);
+    if (nama === "") {
+      if (series.length) break; else continue;
+    }
+    var stok = [];
+    for (var s = 0; s < dataCols.length; s++) {
+      stok.push(invRound_(g[i][dataCols[s]], 3));
+    }
+    series.push({ nama: nama, bagian: invStr_(g[i][bagianCol]), stok: stok });
+  }
+
+  return { reviewDates: reviewDates, nilaiStok: nilaiStok, jumlahKurang: jumlahKurang, series: series };
+}
+
+function getInventoryPola_() {
+  var g = invGrid_(INV_SHEETS.TERPAKAI);
+  var col = invHeaderMap_(g[0]);
+  var items = [];
+  for (var i = 1; i < g.length; i++) {
+    var nama = invStr_(invCell_(g[i], col, "NAMA BARANG"));
+    if (nama === "") continue;
+    items.push({
+      nama: nama,
+      bagian: invStr_(invCell_(g[i], col, "BAGIAN")),
+      tipe: invStr_(invCell_(g[i], col, "TYPE BARANG")),
+      pola: invStr_(invCell_(g[i], col, "Pola Demand")),
+      adi: invNum_(invCell_(g[i], col, "ADI")),
+      cv2: invNum_(invCell_(g[i], col, "CV^2"))
+    });
+  }
+  return items;
+}
+
+/* --- Pencocokan "contains" untuk sheet berlabel panjang/terpotong (OP_RENCANA). --- */
+function invRowHasSub_(row, sub) {
+  for (var i = 0; i < row.length; i++) { if (invStr_(row[i]).indexOf(sub) >= 0) return true; }
+  return false;
+}
+
+/** Nilai di sel non-kosong pertama di kanan sel yang MEMUAT sub. */
+function invLeftValueContains_(grid, sub) {
+  for (var i = 0; i < grid.length; i++) {
+    var row = grid[i];
+    for (var j = 0; j < row.length; j++) {
+      if (invStr_(row[j]).indexOf(sub) >= 0) {
+        for (var k = j + 1; k < row.length; k++) {
+          if (invStr_(row[k]) !== "") return row[k];
+        }
+      }
+    }
+  }
+  return null;
+}
+
+/** Indeks kolom pertama yang sama-dengan atau memuat sub. */
+function invColContains_(headerRow, sub) {
+  for (var j = 0; j < headerRow.length; j++) {
+    var t = invStr_(headerRow[j]);
+    if (t === sub || t.indexOf(sub) >= 0) return j;
+  }
+  return -1;
+}
+
+function getInventoryOpOrder_() {
+  var g = invGrid_(INV_SHEETS.OP_ORDER);
+  var CAP = 53;
+  var rowTgl = invFindRow_(g, function (r) { return invRowHas_(r, "Tanggal review"); });
+  var rowUnit = invFindRow_(g, function (r) { return invRowHasSub_(r, "Total unit dipesan"); });
+  var rowSku = invFindRow_(g, function (r) { return invRowHasSub_(r, "Jumlah SKU yang dipesan"); });
+  var rowNilai = invFindRow_(g, function (r) { return invRowHas_(r, "Nilai pesanan (Rp)"); });
+
+  var dataCols = [];
+  for (var c = 0; c < g[rowTgl].length; c++) {
+    if (invIsDate_(g[rowTgl][c])) { dataCols.push(c); if (dataCols.length >= CAP) break; }
+  }
+  var reviewDates = [], totalUnit = [], jumlahSku = [], nilaiPesanan = [];
+  for (var d = 0; d < dataCols.length; d++) {
+    reviewDates.push(invIso_(g[rowTgl][dataCols[d]]));
+    totalUnit.push(Math.round(invNum_(g[rowUnit][dataCols[d]])));
+    jumlahSku.push(Math.round(invNum_(g[rowSku][dataCols[d]])));
+    nilaiPesanan.push(Math.round(invNum_(g[rowNilai][dataCols[d]])));
+  }
+
+  var blockI = invFindRow_(g, function (r) { return invRowHas_(r, "Nama sparepart"); });
+  var nameCol = -1, bagianCol = -1;
+  for (var h = 0; h < g[blockI].length; h++) {
+    var lbl = invStr_(g[blockI][h]);
+    if (lbl === "Nama sparepart") nameCol = h;
+    if (lbl === "Bagian") bagianCol = h;
+  }
+  if (bagianCol < 0) bagianCol = nameCol - 1;
+
+  var series = [];
+  for (var i = blockI + 1; i < g.length; i++) {
+    var nama = invStr_(g[i][nameCol]);
+    if (nama === "") { if (series.length) break; else continue; }
+    var qty = [];
+    for (var s = 0; s < dataCols.length; s++) {
+      qty.push(Math.round(invNum_(g[i][dataCols[s]])));
+    }
+    series.push({ nama: nama, bagian: invStr_(g[i][bagianCol]), qty: qty });
+  }
+
+  return {
+    reviewDates: reviewDates, totalUnit: totalUnit, jumlahSku: jumlahSku,
+    nilaiPesanan: nilaiPesanan, series: series
+  };
+}
+
+function getInventoryOpRencana_() {
+  var g = invGrid_(INV_SHEETS.OP_RENCANA);
+
+  var params = {
+    periodeReviewHari: invNum_(invLeftValueContains_(g, "Periode review R")),
+    tanggalReviewPertama: invIso_(invLeftValueContains_(g, "Tanggal review pertama")),
+    akhirHorizon: invIso_(invLeftValueContains_(g, "Akhir horizon rencana")),
+    serviceLevel: invNum_(invLeftValueContains_(g, "Service level")),
+    biayaPesanK: invNum_(invLeftValueContains_(g, "Biaya pesan K per PO")),
+    biayaSimpanTahun: invNum_(invLeftValueContains_(g, "Biaya simpan per tahun")),
+    tahunAcuan: Math.round(invNum_(invLeftValueContains_(g, "Tahun acuan untuk ringkasan"))),
+    jumlahReview: Math.round(invNum_(invLeftValueContains_(g, "Jumlah review")))
+  };
+
+  var ringkasan = {
+    jumlahPO: Math.round(invNum_(invLeftValueContains_(g, "Jumlah PO"))),
+    totalUnitDipesan: Math.round(invNum_(invLeftValueContains_(g, "Total unit dipesan"))),
+    nilaiPesanan: Math.round(invNum_(invLeftValueContains_(g, "Nilai pesanan (Rp)"))),
+    biayaPesan: Math.round(invNum_(invLeftValueContains_(g, "Biaya pesan = PO"))),
+    rataNilaiStok: invNum_(invLeftValueContains_(g, "Rata-rata nilai stok")),
+    biayaSimpan: invNum_(invLeftValueContains_(g, "Biaya simpan = nilai")),
+    kejadianKekurangan: Math.round(invNum_(invLeftValueContains_(g, "Kejadian kekurangan (SKU"))),
+    totalKekuranganUnit: Math.round(invNum_(invLeftValueContains_(g, "Total kekurangan (unit)"))),
+    biayaPesanSimpan: invNum_(invLeftValueContains_(g, "Biaya pesan + simpan"))
+  };
+
+  var hdrI = invFindRow_(g, function (r) {
+    return invRowHas_(r, "Nama sparepart") && invRowHasSub_(r, "Harga (Rp/unit)");
+  });
+  var hdr = g[hdrI];
+  var cmap = {
+    no: invColContains_(hdr, "No"),
+    bagian: invColContains_(hdr, "Bagian"),
+    nama: invColContains_(hdr, "Nama sparepart"),
+    satuan: invColContains_(hdr, "Satuan"),
+    leadTime: invColContains_(hdr, "Lead time L (hari)"),
+    harga: invColContains_(hdr, "Harga (Rp/unit)"),
+    biayaSimpanUnit: invColContains_(hdr, "Biaya simpan (Rp/unit"),
+    stokAwal: invColContains_(hdr, "Stok awal"),
+    totalDipesan: invColContains_(hdr, "Total dipesan"),
+    dipesanTahunAcuan: invColContains_(hdr, "Dipesan di tahun acuan"),
+    jumlahOrder: invColContains_(hdr, "Jumlah order di tahun"),
+    rataStok: invColContains_(hdr, "Rata-rata stok di tahun"),
+    kekurangan: invColContains_(hdr, "Kejadian kekurangan di tahun")
+  };
+  function cell(row, key) {
+    var j = cmap[key];
+    return (j >= 0 && j < row.length) ? row[j] : null;
+  }
+  var items = [];
+  for (var i = hdrI + 1; i < g.length; i++) {
+    var row = g[i];
+    var no = cell(row, "no");
+    if (no == null || invStr_(no) === "") continue;
+    items.push({
+      no: Math.round(invNum_(no)),
+      bagian: invStr_(cell(row, "bagian")),
+      nama: invStr_(cell(row, "nama")),
+      satuan: invStr_(cell(row, "satuan")),
+      leadTime: invNum_(cell(row, "leadTime")),
+      harga: invNum_(cell(row, "harga")),
+      biayaSimpanUnit: invNum_(cell(row, "biayaSimpanUnit")),
+      stokAwal: invNum_(cell(row, "stokAwal")),
+      totalDipesan: invNum_(cell(row, "totalDipesan")),
+      dipesanTahunAcuan: invNum_(cell(row, "dipesanTahunAcuan")),
+      jumlahOrder: invNum_(cell(row, "jumlahOrder")),
+      rataStok: invNum_(cell(row, "rataStok")),
+      kekurangan: invNum_(cell(row, "kekurangan"))
+    });
+  }
+
+  return { params: params, ringkasan: ringkasan, items: items };
+}
+
+function getInventoryPm_() {
+  var g = invGrid_(INV_SHEETS.PM_OVERHAUL);
+
+  // Konfigurasi (panel kanan).
+  var overhaulPertama = [];
+  for (var r = 0; r < g.length; r++) {
+    var row = g[r];
+    for (var j = 0; j < row.length; j++) {
+      var t = invStr_(row[j]);
+      if (t.indexOf("Overhaul pertama:") === 0) {
+        var mesin = t.split(":")[1] ? t.substring(t.indexOf(":") + 1).replace(/^\s+|\s+$/g, "") : "";
+        var tgl = null;
+        for (var k = j + 1; k < row.length; k++) { if (invStr_(row[k]) !== "") { tgl = row[k]; break; } }
+        overhaulPertama.push({ mesin: mesin, tanggal: invIso_(tgl) });
+      }
+    }
+  }
+  var config = {
+    siklusC: Math.round(invNum_(invLeftValueContains_(g, "Siklus overhaul C"))),
+    jumlahMesinG: Math.round(invNum_(invLeftValueContains_(g, "Jumlah kelompok mesin G"))),
+    modeTampilan: invStr_(invLeftValueContains_(g, "Mode tampilan")),
+    tanggalAwal: invIso_(invLeftValueContains_(g, "Tanggal awal tampilan")),
+    jumlahPeriode: Math.round(invNum_(invLeftValueContains_(g, "Jumlah periode"))),
+    overhaulPertama: overhaulPertama
+  };
+
+  // Kolom periode: baris "Periode ke-", dibatasi ke periode yang punya tanggal "Awal periode".
+  var rPer = invFindRow_(g, function (rr) { return invRowHasSub_(rr, "Periode ke-"); });
+  var rAwal = invFindRow_(g, function (rr) { return invRowHasSub_(rr, "Awal periode"); });
+  var rAkhir = invFindRow_(g, function (rr) { return invRowHasSub_(rr, "Akhir periode"); });
+  var pcols = [];
+  for (var c = 0; c < g[rPer].length; c++) {
+    var pv = g[rPer][c];
+    var awalCell = (c < g[rAwal].length) ? g[rAwal][c] : null;
+    if (typeof pv === "number" && pv >= 1 && invIsDate_(awalCell)) pcols.push(c);
+  }
+  var periods = [];
+  for (var p = 0; p < pcols.length; p++) {
+    periods.push({
+      no: Math.round(invNum_(g[rPer][pcols[p]])),
+      awal: invIso_(g[rAwal][pcols[p]]),
+      akhir: invIso_(g[rAkhir][pcols[p]])
+    });
+  }
+
+  var rTot = invFindRow_(g, function (rr) { return invRowHasSub_(rr, "Total unit semua SKU"); });
+  var rOvh = invFindRow_(g, function (rr) { return invRowHasSub_(rr, "dari overhaul"); });
+  var rPgt = invFindRow_(g, function (rr) { return invRowHasSub_(rr, "dari penggantian"); });
+  var totalPerPeriode = { totalUnit: [], dariOverhaul: [], dariPenggantian: [] };
+  for (var q = 0; q < pcols.length; q++) {
+    totalPerPeriode.totalUnit.push(Math.round(invNum_(g[rTot][pcols[q]])));
+    totalPerPeriode.dariOverhaul.push(Math.round(invNum_(g[rOvh][pcols[q]])));
+    totalPerPeriode.dariPenggantian.push(Math.round(invNum_(g[rPgt][pcols[q]])));
+  }
+
+  // Tabel per-SKU.
+  var hdrI = invFindRow_(g, function (rr) {
+    return invRowHas_(rr, "Nama sparepart") && invRowHasSub_(rr, "Total unit di tampilan");
+  });
+  var hdr = g[hdrI];
+  var cmap = {
+    no: invColContains_(hdr, "No"),
+    bagian: invColContains_(hdr, "Bagian"),
+    nama: invColContains_(hdr, "Nama sparepart"),
+    satuan: invColContains_(hdr, "Satuan"),
+    qtyTerpasang: invColContains_(hdr, "Qty terpasang"),
+    jumlahMesin: invColContains_(hdr, "Jumlah mesin"),
+    intervalSKU: invColContains_(hdr, "Interval SKU (hari)"),
+    overhaulPertama: invColContains_(hdr, "Overhaul pertama"),
+    penggantianTambahan: invColContains_(hdr, "Penggantian tambahan per"),
+    totalUnitTampilan: invColContains_(hdr, "Total unit di tampilan")
+  };
+  function cell(row, key) { var j = cmap[key]; return (j >= 0 && j < row.length) ? row[j] : null; }
+  var items = [];
+  for (var i = hdrI + 1; i < g.length; i++) {
+    var srow = g[i];
+    var no = cell(srow, "no");
+    if (no == null || invStr_(no) === "") continue;
+    var perPeriode = [];
+    for (var pp = 0; pp < pcols.length; pp++) {
+      perPeriode.push(Math.round(invNum_(pcols[pp] < srow.length ? srow[pcols[pp]] : 0)));
+    }
+    items.push({
+      no: Math.round(invNum_(no)),
+      bagian: invStr_(cell(srow, "bagian")),
+      nama: invStr_(cell(srow, "nama")),
+      satuan: invStr_(cell(srow, "satuan")),
+      qtyTerpasang: invNum_(cell(srow, "qtyTerpasang")),
+      jumlahMesin: invNum_(cell(srow, "jumlahMesin")),
+      intervalSKU: invNum_(cell(srow, "intervalSKU")),
+      overhaulPertama: invIso_(cell(srow, "overhaulPertama")),
+      penggantianTambahan: invNum_(cell(srow, "penggantianTambahan")),
+      totalUnitTampilan: invNum_(cell(srow, "totalUnitTampilan")),
+      perPeriode: perPeriode
+    });
+  }
+
+  return { config: config, periods: periods, totalPerPeriode: totalPerPeriode, items: items };
 }

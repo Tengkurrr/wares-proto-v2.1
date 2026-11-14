@@ -47,6 +47,23 @@ export function tanggalJamIndonesia(input: Date | string) {
   return `${tanggalIndonesia(input)}, ${part.hour}.${part.minute}`;
 }
 
+/** Rp tanpa desimal, pemisah ribuan Indonesia. */
+export function formatRupiah(nilai: number) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(Number.isFinite(nilai) ? nilai : 0);
+}
+
+/** Angka ber-pemisah ribuan; `desimal` membatasi angka di belakang koma. */
+export function formatAngka(nilai: number, desimal = 0) {
+  return new Intl.NumberFormat("id-ID", {
+    maximumFractionDigits: desimal,
+    minimumFractionDigits: 0,
+  }).format(Number.isFinite(nilai) ? nilai : 0);
+}
+
 /** SPB-{username}-{YYYYMMDD-HHmm}.pdf */
 export function namaFilePdf(username: string, at: Date = new Date()) {
   const part = bagianWib(at);

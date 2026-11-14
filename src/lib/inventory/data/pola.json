@@ -1,0 +1,796 @@
+{
+ "items": [
+  {
+   "nama": "KABEL LOADCELL ORANGE",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SENSOR KIEPE DG 10",
+   "bagian": "MESIN BAGCODING",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "ASSEMBLY CAM LOOPER /FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 7.0,
+   "cv2": 0.8888888888888891
+  },
+  {
+   "nama": "BALL HOLDER /DS-6",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "BEARING 3A 03020 /DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "BEARING HK 2020 LL /DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "BLOK HINGING PRESSURE FOOT /FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 7.0,
+   "cv2": 0.8888888888888891
+  },
+  {
+   "nama": "CRANK CONNECTING ROD",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 3.5,
+   "cv2": 0.5000000000000001
+  },
+  {
+   "nama": "CRANK CONNECTING ROD (DENGAN BUSHING) /DS-6",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "DISC TENSION BESAR /FISHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "DISC TENSION NEEDLE /FISHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 7.0,
+   "cv2": 1.100936524453694
+  },
+  {
+   "nama": "FEED BAR SHAFT /DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "FEED CRANK LINK PIN /DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "FEED DOG /FISHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "KEY (T3192) / FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 7.0,
+   "cv2": 1.1249999999999998
+  },
+  {
+   "nama": "KNIFE STATIONARY /FISHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "LOOPER /FISHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "LOWER KNIFE BASE /DS-6",
+   "bagian": "MESIN JAHIT",
+   "tipe": "EQUIPMENT",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "MOVING KNIFE / FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "EQUIPMENT",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "NEEDLE BAR ASSY /DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "NEEDLE BEARING /DS-6",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "NEEDLE BEARING 3A 03014 /DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "NEEDLE BEARING 3A 03016 /DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "NEEDLE KLEM NUT /DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "NEEDLE THREAD TAKE UP /DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "NUT 6N 1/4",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "PIN PISTON",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "PRESSER FOOT RIGHT DOUBLE NEEDLE /DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "PULL OF THREAD LOOPER",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 3.5,
+   "cv2": 0.9066666666666667
+  },
+  {
+   "nama": "ROD END STUD",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "FILTER OIL SAKURA /FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SCREW 11/64 S 40061",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SCREW 11/64 S40009",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SCREW 11/64S 40505",
+   "bagian": "MESIN JAHIT",
+   "tipe": "EQUIPMENT",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.22222222222222227
+  },
+  {
+   "nama": "SCREW 4B5X25",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SCREW B103214 (COVER) / FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SCREW PRESSER FOOT / FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SCREW THROAD PLATE( 11/64S40074 ) / FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SCREW THROAD PLATE  ( 11/64S40074 ) / NEWLONG",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.22222222222222227
+  },
+  {
+   "nama": "SEAL FEED DOG / FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SEAL LEVER / FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SEAL MAIN SHAFT / FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SLEEVE TENSION / FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SPRING KNIFE / FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "THREAD TENSION ASSY",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "THREAD TENSION ASSY 065241 A",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 7.0,
+   "cv2": 0.5000000000000001
+  },
+  {
+   "nama": "TUBING 6 MM",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 4.666666666666667,
+   "cv2": 0.25
+  },
+  {
+   "nama": "BALL BEARING W687ZZA",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 7.0,
+   "cv2": 0.5000000000000001
+  },
+  {
+   "nama": "BALL BEARING 6302 ZZ DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "PRESSERBAR LIFTING LINK",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "COUNTER AUTONICS LABN-BP",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "INDIKATOR WEIGHER AD4401A",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 4.666666666666667,
+   "cv2": 0.25
+  },
+  {
+   "nama": "LOADCELL FLINTEC SB8 - 200 KG",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 4.666666666666667,
+   "cv2": 0.38999999999999985
+  },
+  {
+   "nama": "LOADCELL FLINTEC SB8 - 50 KG",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "LOADCELL FLINTEC SB8-200KG",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 4.666666666666667,
+   "cv2": 0.6093750000000002
+  },
+  {
+   "nama": "LOADCELL HBM Z6FC3 - 50 KG",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "LOADCELL TEDEA 616 300KG",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 2.3333333333333335,
+   "cv2": 0.4694411414982164
+  },
+  {
+   "nama": "PISTON AVENTIC 50 X 50",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 3.5,
+   "cv2": 0.5866666666666668
+  },
+  {
+   "nama": "PISTON CKD SCA2 50 X 100",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "EQUIPMENT",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "PISTON EMC RAL 40 X 50",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "PISTON EMC TBC 40 X 50",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "PISTON FESTO 50 X 100",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "EQUIPMENT",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "PISTON FESTO 50 X 50",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 2.3333333333333335,
+   "cv2": 0.5007284079084288
+  },
+  {
+   "nama": "PISTON FESTO DSBC 50 X 100",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "PISTON SMC CDG1UA50-75Z",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.22222222222222227
+  },
+  {
+   "nama": "PISTON TPM TSC 50 X 100",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "EQUIPMENT",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.22222222222222227
+  },
+  {
+   "nama": "PISTON TPM TSC 50 X 150",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "EQUIPMENT",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "PISTON TPM TSC 50 X 50",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "EQUIPMENT",
+   "pola": "Intermittent",
+   "adi": 4.666666666666667,
+   "cv2": 0.11999999999999988
+  },
+  {
+   "nama": "PLC ALLEN BRADLEY 1000",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "REGULATOR CKD 3000-8N-W",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "REGULATOR CKD C2010-8N-W-CFJMI",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "EQUIPMENT",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "REGULATOR CKD W2000-8N-W",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 4.666666666666667,
+   "cv2": 0.25
+  },
+  {
+   "nama": "SENSOR AUTONICS BRQM100-DDTA",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.22222222222222227
+  },
+  {
+   "nama": "SENSOR AUTONICS PR18-5DP",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "EQUIPMENT",
+   "pola": "Lumpy",
+   "adi": 4.666666666666667,
+   "cv2": 0.8124999999999999
+  },
+  {
+   "nama": "SENSOR FESTO KMEB-1-24-2,5-LED",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SENSOR FESTO SME-8M-DS-24V-K-2,5-OE",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 2.8,
+   "cv2": 0.5853174603174603
+  },
+  {
+   "nama": "SENSOR OMRON E2E-X10C130",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "EQUIPMENT",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SENSOR SICK MZT8-03VPS-KRX",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "EQUIPMENT",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.22222222222222227
+  },
+  {
+   "nama": "SOV EMC RV5221-08GEA",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 2.3333333333333335,
+   "cv2": 0.1823688480259599
+  },
+  {
+   "nama": "SOV FESTO CPE18-M1H-5/3E-1/4",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 3.5,
+   "cv2": 1.7777777777777777
+  },
+  {
+   "nama": "SOV JELPC JAV310-08",
+   "bagian": "BAGGING MACHINE",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "ASSEMBLY PIVOT LOOPER /FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "BEARING 3A 03013 /DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "CRANK SHAFT 101042 /DS-6",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "HUB PULLEY /FISHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "LOOPER ROCKER",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Lumpy",
+   "adi": 4.666666666666667,
+   "cv2": 0.7499999999999999
+  },
+  {
+   "nama": "PRESSER FOOT /FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "PRESSER BAR LIFTER DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "PULLEY HUB / DS9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "EQUIPMENT",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SCREW - F103258",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SCREW 11/64 S40059",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SCREW SC63234 (SHANK) / FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SPRING TENSION NEEDLE LEVER / FISCHBEIN",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SPRING W6171",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "THROAD PLATE NEW LONG DS",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "UPPER KNIFE NEWLONG",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "NUT FEEDDOG 11/64N40204",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "FEEDBAR DS-9",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 7.0,
+   "cv2": 0.0
+  },
+  {
+   "nama": "SCREW 11/64S40075",
+   "bagian": "MESIN JAHIT",
+   "tipe": "COSUMABLE",
+   "pola": "Intermittent",
+   "adi": 14.0,
+   "cv2": 0.0
+  }
+ ]
+}
