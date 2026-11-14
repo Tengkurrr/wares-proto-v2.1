@@ -1,29 +1,28 @@
-import { AksesTerkunci } from "@/components/akses-terkunci";
-import { DashboardClient } from "@/components/dashboard/dashboard-client";
+import { DashboardInventoryView } from "@/components/inventory/dashboard-inventory";
+import { Alert } from "@/components/ui/alert";
 import { requireProfile } from "@/lib/auth";
-import { ambilBarisKeluar } from "@/lib/dashboard";
-import { ambilDataKpiAman } from "@/lib/kpi/source";
+import { ambilDashboardInventoryAman } from "@/lib/inventory/source";
 
-export const metadata = { title: "Dashboard — WARES" };
+export const metadata = { title: "Dashboard Status Sparepart — WARES" };
 
 export default async function DashboardPage() {
-  const profile = await requireProfile();
+  // Dashboard status stok dapat dilihat semua peran (matriks akses: L untuk
+  // Maintenance, Warehouse, dan Admin). requireProfile cukup untuk memastikan
+  // pengguna sudah login.
+  await requireProfile();
 
-  // Untuk mekanik, agregasi dashboard sengaja TIDAK diambil: tidak ada satu pun
-  // angka milik admin yang dikirim ke browsernya. Yang tampil hanya kerangka buram.
-  if (!profile.is_admin) {
+  const hasil = await ambilDashboardInventoryAman();
+
+  if (!hasil.ok) {
     return (
-      <AksesTerkunci
-        judul="Dashboard"
-        deskripsi="Ringkasan dan grafik aktivitas gudang hanya dapat dilihat administrator."
-      />
+      <div className="space-y-4">
+        <h1 className="text-2xl font-semibold text-ink">Dashboard Status Sparepart</h1>
+        <Alert variant="destructive">
+          Data status sparepart tidak dapat dimuat: {hasil.pesan}
+        </Alert>
+      </div>
     );
   }
 
-  // Dua sumber yang saling bebas: transaksi dari Postgres, KPI dari spreadsheet.
-  // `ambilDataKpiAman` tidak pernah melempar, jadi analitik barang keluar tetap
-  // tampil meskipun sheet KPI belum dibuat.
-  const [baris, kpi] = await Promise.all([ambilBarisKeluar(), ambilDataKpiAman()]);
-
-  return <DashboardClient baris={baris} kpi={kpi} />;
+  return <DashboardInventoryView data={hasil.data} sumber={hasil.sumber} />;
 }

@@ -5,6 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   BarChart3,
+  CalendarClock,
+  ClipboardList,
   Database,
   FilePlus2,
   History,
@@ -14,6 +16,9 @@ import {
   Menu,
   PackagePlus,
   PackageSearch,
+  ShoppingCart,
+  TrendingUp,
+  Wallet,
   X,
 } from "lucide-react";
 
@@ -27,6 +32,13 @@ type NavItem = { href: string; label: string; icon: typeof FilePlus2; terkunci?:
 
 const BASE_NAV: NavItem[] = [
   { href: "/home", label: "Beranda", icon: Home },
+  // Modul inventory (WARES v2) — dapat dilihat semua peran (matriks akses: L).
+  { href: "/dashboard", label: "Dashboard", icon: BarChart3 },
+  { href: "/detail-sku", label: "Detail SKU", icon: ClipboardList },
+  { href: "/proyeksi-stok", label: "Proyeksi Stok", icon: TrendingUp },
+  { href: "/jadwal-pm", label: "Jadwal PM", icon: CalendarClock },
+  { href: "/rencana-pesanan", label: "Rencana Pesanan", icon: ShoppingCart },
+  { href: "/biaya", label: "Biaya & Evaluasi", icon: Wallet },
   { href: "/buat-permintaan", label: "Buat Permintaan", icon: FilePlus2 },
   { href: "/stok", label: "Informasi Stok", icon: PackageSearch },
   { href: "/riwayat", label: "Riwayat Saya", icon: History },
@@ -35,7 +47,6 @@ const BASE_NAV: NavItem[] = [
 const ADMIN_NAV: NavItem[] = [
   { href: "/master-data", label: "Master Data", icon: Database },
   { href: "/input-stok", label: "Input Stok", icon: PackagePlus },
-  { href: "/dashboard", label: "Dashboard", icon: BarChart3 },
 ];
 
 export function TopBar({ namaLengkap, isAdmin }: { namaLengkap: string; isAdmin: boolean }) {

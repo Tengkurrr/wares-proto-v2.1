@@ -12,7 +12,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test:unit": "node --import tsx --test src/lib/master-data/config.test.ts src/lib/racks/canonical.test.ts src/lib/kpi/definitions.test.ts src/lib/kpi/apps-script-sync.test.ts",
+    "test:unit": "node --import tsx --test src/lib/master-data/config.test.ts src/lib/racks/canonical.test.ts src/lib/kpi/definitions.test.ts src/lib/kpi/apps-script-sync.test.ts src/lib/inventory/apps-script-inv.test.ts",
     "seed": "tsx scripts/seed.ts",
     "backfill:stock": "tsx scripts/backfill-stock.ts",
     "backfill:master": "tsx scripts/backfill-master.ts"

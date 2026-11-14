@@ -314,3 +314,53 @@ export function getOutgoingStatus(requestId: string, syncToken?: string) {
     5_000
   );
 }
+
+/* ------------------------------------------------------------------ *
+ * Inventory (WARES v2) — pembacaan hasil model dari workbook
+ * "WARES Reliability x Inventory Management". Read-only: website hanya
+ * mencerminkan angka yang dihitung rumus Excel. Hanya dipanggil bila
+ * INVENTORY_SOURCE=sheets; jika tidak, source.ts memakai fixture lokal.
+ * ------------------------------------------------------------------ */
+
+import type {
+  DashboardInventory,
+  DataDemand,
+  ItemRmHasil,
+  OpOrder,
+  OpRencana,
+  PmOverhaul,
+  PolaItem,
+  ProyeksiStok,
+} from "@/lib/inventory/types";
+
+export function getInventoryDashboard() {
+  return callSheets<DashboardInventory>("inv.dashboard", {}, 15_000);
+}
+
+export function getInventoryRmHasil() {
+  return callSheets<{ items: ItemRmHasil[] }>("inv.rmhasil", {}, 15_000);
+}
+
+export function getInventoryProyeksi() {
+  return callSheets<ProyeksiStok>("inv.proyeksi", {}, 15_000);
+}
+
+export function getInventoryDemand() {
+  return callSheets<DataDemand>("inv.demand", {}, 15_000);
+}
+
+export function getInventoryPola() {
+  return callSheets<{ items: PolaItem[] }>("inv.pola", {}, 15_000);
+}
+
+export function getInventoryOpOrder() {
+  return callSheets<OpOrder>("inv.oporder", {}, 15_000);
+}
+
+export function getInventoryOpRencana() {
+  return callSheets<OpRencana>("inv.oprencana", {}, 15_000);
+}
+
+export function getInventoryPm() {
+  return callSheets<PmOverhaul>("inv.pm", {}, 15_000);
+}
