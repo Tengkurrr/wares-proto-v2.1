@@ -1,0 +1,32 @@
+node_modules/
+.pnpm-store/
+.next/
+out/
+build/
+.DS_Store
+*.pem
+
+# Abaikan SEMUA varian .env — termasuk salah ketik seperti ".env.localll".
+# Pola lama (.env*.local) melewatkan berkas semacam itu, dan berkas seperti itu
+# berisi SERVICE_ROLE_KEY. Hanya template contoh yang boleh ikut ke repo.
+.env*
+!.env*.example
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+next-env.d.ts
+tsconfig.tsbuildinfo
+.vercel
+
+# Aset sumber asli — versi jadinya sudah ada di public/brand & scripts/catalog.json.
+# Tetap disimpan di disk, tidak perlu ikut ke repo (menghemat ~10MB).
+/WARES Logo.png
+/WARES Logo (1).png
+/Area-Pabrik-1A-Petrokimia-Gresik.jpeg
+/Desain tanpa judul (54).png
+/Desain tanpa judul (55).png
+/DESNO .xlsx
+/FORM PENGAMBILAN BARANG 2026.pdf
+
