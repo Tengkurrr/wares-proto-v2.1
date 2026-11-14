@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Palet WARES ditulis sebagai KANAL RGB ("0 129 58"), bukan hex.
+ * Alasannya wajib: Tailwind memakai pola rgb(var(--x) / <alpha-value>) supaya
+ * modifier opasitas (bg-brand/25, border-gold/50, …) tetap bekerja. Format hex
+ * akan mematikan seluruh modifier tersebut.
+ */
+@layer base {
+  :root {
+    --brand: 0 129 58;
+    --brand-dark: 0 107 49;
+    --brand-light: 231 246 238;
+    /* Teks di atas bidang --brand yang terisi penuh. */
+    --brand-fg: 255 255 255;
+
+    --gold: 251 200 0;
+    /* Teks di atas bidang emas tipis (bg-gold/10) — emas murni tak terbaca. */
+    --gold-ink: 122 100 0;
+
+    --ink: 26 26 26;
+    --muted: 107 114 128;
+    --surface: 255 255 255;
+    --bg: 246 247 249;
+    --border: 229 231 235;
+
+    --destructive: 220 38 38;
+    --destructive-fg: 255 255 255;
+
+    /* Warna grafik dashboard — dibaca recharts lewat getComputedStyle. */
+    --chart-grid: 229 231 235;
+    --chart-axis: 107 114 128;
+    --chart-1: 0 165 71;
+    --chart-2: 251 200 0;
+    --chart-3: 0 129 58;
+    --chart-4: 95 206 147;
+    --chart-5: 199 159 0;
+    --chart-6: 11 110 54;
+    --chart-7: 155 223 187;
+    --chart-8: 255 224 113;
+    --chart-9: 4 81 42;
+    --chart-10: 138 113 0;
+
+    --radius: 0.75rem;
+    --shadow-color: 16 24 40;
+    --scrollbar-thumb: 209 213 219;
+
+    color-scheme: light;
+  }
+
+  /*
+   * Mode gelap: abu netral (#14161A), bukan hitam pekat — lebih nyaman untuk
+   * pemakaian lama. Nilai dipilih agar kontras teks memenuhi WCAG AA:
+   * ink 15:1, muted 7:1, brand-dark 9,3:1 terhadap latarnya masing-masing.
+   */
+  .dark {
+    --brand: 0 129 58;
+    /* Di mode gelap peran "dark" terbalik: ia jadi aksen TERANG di atas gelap. */
+    --brand-dark: 95 217 143;
+    --brand-light: 17 48 38;
+    --brand-fg: 255 255 255;
+
+    --gold: 251 200 0;
+    --gold-ink: 250 214 92;
+
+    --ink: 232 234 237;
+    --muted: 155 161 172;
+    --surface: 28 31 38;
+    --bg: 20 22 26;
+    --border: 42 47 58;
+
+    /* Merah dicerahkan agar terbaca sebagai teks; isian penuh memakai teks gelap. */
+    --destructive: 248 113 113;
+    --destructive-fg: 20 22 26;
+
+    --chart-grid: 42 47 58;
+    --chart-axis: 155 161 172;
+    --chart-1: 45 200 110;
+    --chart-2: 251 200 0;
+    --chart-3: 110 224 160;
+    --chart-4: 22 150 82;
+    --chart-5: 224 180 40;
+    --chart-6: 160 232 192;
+    --chart-7: 12 116 62;
+    --chart-8: 255 230 140;
+    --chart-9: 70 190 130;
+    --chart-10: 190 150 30;
+
+    --shadow-color: 0 0 0;
+    --scrollbar-thumb: 60 66 80;
+
+    color-scheme: dark;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    /*
+     * Memesan ruang scrollbar permanen di KEDUA sisi. Tanpa ini, konten di-center
+     * terhadap area isi (tanpa scrollbar) sehingga selalu meleset ~8px ke kiri,
+     * dan seluruh layout melompat horizontal saat berpindah dari halaman panjang
+     * (ada scrollbar) ke halaman pendek (tak ada scrollbar).
+     */
+    scrollbar-gutter: stable both-edges;
+  }
+
+  body {
+    @apply bg-bg text-ink antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1 {
+    @apply text-[28px] font-bold leading-tight tracking-tight sm:text-[32px];
+  }
+
+  h2 {
+    @apply text-xl font-semibold leading-snug sm:text-2xl;
+  }
+
+  ::selection {
+    background-color: rgb(var(--brand-light));
+    color: rgb(var(--brand-dark));
+  }
+}
+
+@layer components {
+  .card-surface {
+    @apply rounded-xl border border-border bg-surface shadow-card;
+  }
+}
+
+/*
+ * Transisi tema hanya dinyalakan SELAMA pergantian (kelas ini dipasang ~360ms
+ * oleh theme-provider lalu dilepas). Kalau transisi dibiarkan permanen, setiap
+ * hover/fokus ikut melambat dan UI terasa berat.
+ */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition:
+    background-color 300ms ease,
+    border-color 300ms ease,
+    color 300ms ease,
+    fill 300ms ease,
+    stroke 300ms ease !important;
+  transition-delay: 0s !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-transition,
+  .theme-transition *,
+  .theme-transition *::before,
+  .theme-transition *::after {
+    transition: none !important;
+  }
+}
+
+/*
+ * recharts menghitung lebar legend sekali lalu menahannya; saat layar diputar
+ * ukuran lama sempat terpakai dan halaman ikut melebar. Kunci agar tidak pernah
+ * melampaui wadahnya.
+ */
+.recharts-legend-wrapper {
+  max-width: 100%;
+}
+
+/* Scrollbar halus untuk list katalog yang panjang */
+@layer utilities {
+  .scrollbar-slim {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--scrollbar-thumb)) transparent;
+  }
+  .scrollbar-slim::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .scrollbar-slim::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--scrollbar-thumb));
+    border-radius: 9999px;
+  }
+}

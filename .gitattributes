@@ -1,0 +1,12 @@
+# Simpan semua teks dengan LF di repo (build Vercel berjalan di Linux),
+# biarkan working copy Windows tetap CRLF saat checkout.
+* text=auto eol=lf
+
+# Aset biner — jangan diutak-atik line ending-nya.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
+*.ico binary
+*.woff binary
+*.woff2 binary
