@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 
 import { requireApiAdmin } from "@/lib/api-admin";
+import { isLocalMode } from "@/lib/local-mode";
+import { localMasterItems } from "@/lib/local/fixtures";
 import { createMasterData } from "@/lib/google-sheets/client";
 import { sheetsErrorResponse } from "@/lib/google-sheets/http-error";
 import { invalidateMasterDataCache } from "@/lib/google-sheets/master-cache";
@@ -23,6 +25,17 @@ import { masterDataSchema } from "@/lib/schemas";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  // Mode lokal: Master Data 99 item dari fixture, tanpa Supabase/Apps Script.
+  if (isLocalMode()) {
+    return NextResponse.json(
+      {
+        items: localMasterItems(),
+        meta: { source: "lokal", count: localMasterItems().length, sheetsMirrorConfigured: false },
+      },
+      { headers: { "Cache-Control": "no-store", "X-Wares-Master-Source": "lokal" } }
+    );
+  }
+
   const auth = await requireApiAdmin();
   if (!auth.ok) return auth.response;
 

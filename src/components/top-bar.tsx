@@ -23,8 +23,10 @@ import {
 } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
+import { RoleSwitcher } from "@/components/role-switcher";
 import { Button } from "@/components/ui/button";
 import { WaresMark } from "@/components/wares-mark";
+import { bisaLihatBiaya, DAFTAR_PERAN, type Peran } from "@/lib/roles";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
@@ -49,20 +51,32 @@ const ADMIN_NAV: NavItem[] = [
   { href: "/input-stok", label: "Input Stok", icon: PackagePlus },
 ];
 
-export function TopBar({ namaLengkap, isAdmin }: { namaLengkap: string; isAdmin: boolean }) {
+export function TopBar({
+  namaLengkap,
+  peran,
+  lokal = false,
+}: {
+  namaLengkap: string;
+  peran: Peran;
+  lokal?: boolean;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const [keluar, setKeluar] = useState(false);
   const [errorKeluar, setErrorKeluar] = useState<string | null>(null);
   const [menuTerbuka, setMenuTerbuka] = useState(false);
 
+  const isAdmin = peran === "admin";
+  // Biaya & Evaluasi menyimpan harga/nilai Rp: pada matriks, Maintenance tak punya akses.
+  const baseNav = BASE_NAV.filter((item) => item.href !== "/biaya" || bisaLihatBiaya(peran));
+
   // Mekanik tetap melihat menu admin agar tahu fitur itu ada, tetapi ditandai
   // gembok; halamannya sendiri tampil buram dengan pesan menghubungi admin.
   const nav: NavItem[] = isAdmin
-    ? [...BASE_NAV, ...ADMIN_NAV]
-    : [...BASE_NAV, ...ADMIN_NAV.map((item) => ({ ...item, terkunci: true }))];
+    ? [...baseNav, ...ADMIN_NAV]
+    : [...baseNav, ...ADMIN_NAV.map((item) => ({ ...item, terkunci: true }))];
 
-  const labelPeran = isAdmin ? "Administrator" : "Mekanik";
+  const labelPeran = DAFTAR_PERAN.find((p) => p.id === peran)?.label ?? "Mekanik";
 
   async function handleKeluar() {
     setKeluar(true);
@@ -89,7 +103,9 @@ export function TopBar({ namaLengkap, isAdmin }: { namaLengkap: string; isAdmin:
           <WaresMark />
         </Link>
 
-        <nav className="hidden items-center gap-0.5 2xl:flex">
+        {/* min-w-0 + flex-1 + overflow-x-auto: saat menu banyak, NAV-nya yang
+            bergeser horizontal, bukan seluruh halaman. Scrollbar disembunyikan. */}
+        <nav className="hidden min-w-0 flex-1 items-center gap-0.5 overflow-x-auto 2xl:flex [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {nav.map((item) => {
             const aktif = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
@@ -120,6 +136,7 @@ export function TopBar({ namaLengkap, isAdmin }: { namaLengkap: string; isAdmin:
             <div className="truncate text-sm font-semibold text-ink">{namaLengkap}</div>
             <div className="text-[11px] text-muted">{labelPeran}</div>
           </div>
+          {lokal ? <RoleSwitcher peran={peran} /> : null}
           {/* Target sentuh 40px selama tombol hamburger masih tampil (< 2xl),
               dirampingkan jadi 36px di desktop tempat kursor lebih presisi. */}
           <ThemeToggle className="h-10 w-10 2xl:h-9 2xl:w-9" />

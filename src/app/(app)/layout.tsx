@@ -1,12 +1,18 @@
 import { TopBar } from "@/components/top-bar";
 import { requireProfile } from "@/lib/auth";
+import { isLocalMode } from "@/lib/local-mode";
+import { peranDariProfile } from "@/lib/roles";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const profile = await requireProfile();
 
   return (
     <div className="flex min-h-screen flex-col">
-      <TopBar namaLengkap={profile.nama_lengkap} isAdmin={profile.is_admin} />
+      <TopBar
+        namaLengkap={profile.nama_lengkap}
+        peran={peranDariProfile(profile)}
+        lokal={isLocalMode()}
+      />
       {/* Padding tepi naik jadi 40px di layar besar supaya konten tidak mepet tepi
           pada laptop 1280px (di sana max-w-7xl memenuhi lebar layar). Nilai ini
           WAJIB sama dengan top-bar dan footer agar semuanya tetap sejajar. */}

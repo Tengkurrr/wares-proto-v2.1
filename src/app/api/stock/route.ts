@@ -1,12 +1,21 @@
 import { NextResponse } from "next/server";
 
 import { GoogleSheetsError } from "@/lib/google-sheets/client";
+import { isLocalMode } from "@/lib/local-mode";
+import { localStockSnapshot } from "@/lib/local/fixtures";
 import { readStockSnapshot } from "@/lib/stock/source";
 import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  // Mode lokal: snapshot 99 item dari fixture, tanpa Supabase/Apps Script.
+  if (isLocalMode()) {
+    return NextResponse.json(localStockSnapshot(), {
+      headers: { "Cache-Control": "no-store" },
+    });
+  }
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Silakan login terlebih dahulu." }, { status: 401 });

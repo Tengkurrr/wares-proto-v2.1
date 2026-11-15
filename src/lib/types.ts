@@ -5,6 +5,8 @@ export type Profile = {
   no_hp: string | null;
   email_kerja: string | null;
   is_admin: boolean;
+  /** Peran 3-tier WARES v2. Opsional: instalasi lama hanya punya is_admin. */
+  role?: "maintenance" | "warehouse" | "admin" | null;
   created_at: string;
 };
 

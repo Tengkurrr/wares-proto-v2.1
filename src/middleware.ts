@@ -1,10 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { hasSupabaseEnv } from "@/lib/env";
+import { isLocalMode } from "@/lib/local-mode";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Mode lokal (review tanpa DB): teruskan semua request; auth distub di
+  // requireProfile dan data dari fixture. Tidak ada redirect ke /setup atau /login.
+  if (isLocalMode()) return NextResponse.next();
 
   // Belum ada kredensial Supabase → tampilkan panduan setup, jangan error.
   if (!hasSupabaseEnv()) {

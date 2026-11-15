@@ -1,9 +1,38 @@
 import { cache } from "react";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { COOKIE_PERAN, isLocalMode } from "@/lib/local-mode";
+import { isPeran, peranDariProfile, type Peran } from "@/lib/roles";
 import { cobaUlangKueri } from "@/lib/supabase/retry";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/types";
+
+/**
+ * Profil sintetis untuk mode lokal (tanpa database). Peran diambil dari cookie
+ * yang di-set pengalih peran dev-only; default maintenance.
+ */
+async function profilLokal(): Promise<Profile> {
+  let peran: Peran = "maintenance";
+  try {
+    const nilai = (await cookies()).get(COOKIE_PERAN)?.value;
+    if (isPeran(nilai)) peran = nilai;
+  } catch {
+    /* abaikan: pakai default */
+  }
+  const label =
+    peran === "admin" ? "Administrator" : peran === "warehouse" ? "Petugas Gudang" : "Mekanik";
+  return {
+    id: `local-${peran}`,
+    username: `PG-${peran.toUpperCase()}`,
+    nama_lengkap: `${label} (Demo)`,
+    no_hp: null,
+    email_kerja: null,
+    is_admin: peran === "admin",
+    role: peran,
+    created_at: new Date().toISOString(),
+  };
+}
 
 /**
  * Ambil user + profil yang sedang login. Redirect ke /login kalau belum login.
@@ -13,6 +42,9 @@ import type { Profile } from "@/lib/types";
  * requireAdmin) berbagi satu hasil, jadi getUser + query profiles tidak dobel.
  */
 export const requireProfile = cache(async (): Promise<Profile> => {
+  // Mode lokal: lewati Supabase sepenuhnya, pakai profil demo dari cookie peran.
+  if (isLocalMode()) return profilLokal();
+
   const supabase = await createClient();
 
   // getUser di-retry: satu gangguan sesaat tidak boleh melempar pengguna yang
